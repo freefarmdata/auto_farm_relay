@@ -1,6 +1,8 @@
 const axios = require('axios');
 const retry = require('async-retry');
+const config = require('config');
 
+const requestUrl = `${config.get('LIVE_PANTRY_HOST')}/ingest`;
 const retryOptions = {
   retries: 3,
   factor: 1.245,
@@ -24,7 +26,7 @@ function onData() {
   return async (data) => {
     try {
       console.log(`transporting item. Length: ${data.length}`);
-      await retry(() => axios.post('/ingest', data), retryOptions);
+      await retry(() => axios.post(requestUrl, data), retryOptions);
     } catch (err) {
       console.log('relay error', err.message);
     }
@@ -46,6 +48,7 @@ function onError(socket) {
 
 function onTimeout(socket) {
   return () => {
+    console.log('socket timeout');
     socket.close();
   }
 }

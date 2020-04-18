@@ -1,17 +1,19 @@
 const net = require('net');
 const config  = require('config');
 const axios = require('axios');
-const controller = require('./controller');
+const live = require('./controllers/live');
+const historic = require('./controllers/historic');
 
 axios.defaults.headers.common[ 'Content-Type' ] = 'application/json';
-axios.defaults.baseURL = config.get('PANTRY_HOST');
 
 const port = config.get('PORT');
 const host = config.get('HOST');
 
 function start(cb) {
-  net.createServer(controller.onConnect())
-    .listen(port, host, cb);
+  // net.createServer(live.onConnect())
+  //   .listen(port, host, cb);
+
+  historic.initialize();
 }
 
 start(() => {
