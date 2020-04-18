@@ -11,15 +11,15 @@ focus soley on being really efficent in it's loop cycles.
 
 ### How To Test?
 
-1.) ```nvm use```
-2.) ```npm i```
-3.) ```npm start```
-4.) open another shell
-5.) ```./test.sh```
-6.) watch data stream in!
+1. ```nvm use```
+2. ```npm i```
+3. ```npm start```
+4. open another shell
+5. ```./test.sh```
+6. watch data stream in!
 
 ### How To Build and Run?
 
-1.) ```docker build -t auto_farm_relay .```
-2.) ```docker run -d -p 5656:5656 auto_farm_relay```
-3.) ```docker ps``` to confirm it's running
+1. ```docker build -t auto_farm_relay .```
+2. ```docker run -d -p 5656:5656 auto_farm_relay```
+3. ```docker ps``` to confirm it's running
