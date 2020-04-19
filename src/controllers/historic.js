@@ -1,8 +1,13 @@
 const sql = require('sqlite3');
 const axios = require('axios');
+const retry = require('async-retry');
+const os = require('os');
+const path = require('path');
 const config = require('config');
 
 const requestUrl = `${config.get('HISTORIC_PANTRY_HOST')}/ingest`;
+const dbPath = path.join(os.homedir(), config.get('SQL_PATH'));
+
 const FIVE_MINUTES = 5 * 60 * 1000;
 const retryOptions = {
   retries: 3,
@@ -27,7 +32,7 @@ const pipeline = [
 function connect() {
   return async (request) => {
     return await new Promise((resolve, reject) => {
-      db = new sql.Database(config.get('SQL_HOST'), sql.OPEN_READONLY, (err) => {
+      db = new sql.Database(dbPath, sql.OPEN_READONLY, (err) => {
         if (err) {
           return reject(err);
         }

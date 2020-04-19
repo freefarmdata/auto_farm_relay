@@ -10,10 +10,10 @@ const port = config.get('PORT');
 const host = config.get('HOST');
 
 function start(cb) {
-  // net.createServer(live.onConnect())
-  //   .listen(port, host, cb);
-
   historic.initialize();
+
+  net.createServer(live.onConnect())
+    .listen(port, host, cb);
 }
 
 start(() => {
