@@ -5,6 +5,8 @@ const os = require('os');
 const path = require('path');
 const config = require('config');
 
+const logger = require('../util/logger');
+
 const requestUrl = `${config.get('HISTORIC_PANTRY_HOST')}/ingest`;
 const dbPath = path.join(os.homedir(), config.get('SQL_PATH'));
 
@@ -111,7 +113,7 @@ async function process() {
   try {
     await pipeline.reduce(async (p, fn) => await fn(await p), Promise.resolve({}));
   } catch (err) {
-    console.log('historic error', err.message);
+    logger.log('historic error', err.message);
   } finally {
     await disconnect();
   }
