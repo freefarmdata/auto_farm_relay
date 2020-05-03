@@ -1,11 +1,18 @@
 syntax = "proto2";
 
+message Alarm {
+  required uint32 time = 1;
+  required string title = 2;
+  required uint32 severity = 3;
+  required string text = 4;
+}
+
 message SoilReading {
   required uint32 reading = 1;
   required uint32 time = 2;
   required uint32 pin = 3;
-  required float median = 4;
-  required float standard_dev = 5;
+  optional float median = 4;
+  optional float standard_dev = 5;
 }
 
 message TempReading {
@@ -16,6 +23,13 @@ message TempReading {
 message HumidReading {
   required float humid = 1;
   required uint32 time = 2;
+}
+
+message PiStatsReading {
+  required float pi_temp = 1;
+  required float pi_volts = 2;
+  required uint32 up_time = 3;
+  required uint32 time = 4;
 }
 
 message SoilStorage {
@@ -30,30 +44,20 @@ message HumidStorage {
   repeated HumidReading humid = 1;
 }
 
-message CurrentSoil {
-  required uint32 reading = 1;
-  required uint32 pin = 3;
-  required float median = 4;
-  required float standard_dev = 5;
-}
-
 message Status {
   required uint32 software = 1;
   required uint32 version = 2;
   required string id = 3;
   required string url = 4;
-  required uint32 lights = 5;
-  required uint32 cameras = 6;
-  required bool halted = 7;
-  required bool debug = 8;
-  required bool soil_calibrating = 9;
-  required float current_temp = 10;
-  required float current_humid = 11;
-  required float pi_temp = 12;
-  required float pi_volts = 13;
-  required uint32 up_time = 14;
-  repeated CurrentSoil current_soil = 15;
-  
+  required uint32 cameras = 5;
+  required bool halted = 6;
+  required bool debug = 7;
+  required bool soil_calibrating = 8;
+  required TempReading current_temp = 9;
+  required HumidReading current_humid = 10;
+  required PiStatsReading pi_stats = 11;
+  repeated SoilReading current_soil = 12;
+  repeated Alarm alarms = 13;
 }
 message Modifiers {
   required bool reboot = 1;
@@ -62,8 +66,7 @@ message Modifiers {
   required uint32 image_interval = 4;
   required uint32 morning_time = 5;
   required uint32 night_time = 6;
-  required bool lights_enabled = 7;
-  required bool cameras_enabled = 8;
+  required bool cameras_enabled = 7;
 }
 
 message State {

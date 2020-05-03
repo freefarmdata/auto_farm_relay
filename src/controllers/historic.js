@@ -28,7 +28,13 @@ const pipeline = [
   drop('temp'),
   query('humid'),
   relay('humid'),
-  drop('humid')
+  drop('humid'),
+  query('soil'),
+  relay('soil'),
+  drop('soil'),
+  query('alarms'),
+  relay('alarms'),
+  drop('alarms')
 ]
 
 function connect() {
@@ -85,7 +91,7 @@ function query(key) {
 
 function relay(key) {
   return async (request) => {
-    await retry(() => axios.post(requestUrl, { data: request[key] }), retryOptions);
+    await retry(() => axios.post(requestUrl, { data: request[key], type: key }), retryOptions);
     return request;
   }
 }
