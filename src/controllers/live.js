@@ -6,7 +6,7 @@ const update = require('./update');
 
 const logger = require('../util/logger');
 
-const requestUrl = `${config.get('PANTRY_HOST')}/live`;
+const requestUrl = `http://${config.get('PANTRY_HOST')}/live`;
 const retryOptions = {
   retries: 3,
   factor: 1.245,
@@ -44,7 +44,7 @@ async function updateClient(socket) {
 async function relayData(data) {
   try {
     logger.log('transporting item', data.length);
-    await retry(() => axios.post(requestUrl, data), retryOptions);
+    await retry(() => axios.post(requestUrl, { data }), retryOptions);
   } catch (err) {
     logger.log('relay error', err.message);
   }
