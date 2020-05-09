@@ -3,8 +3,11 @@ const retry = require('async-retry');
 const config = require('config');
 const net = require('net');
 const update = require('./update');
+const Cache = require('../util/cache');
 
 const logger = require('../util/logger');
+
+const cache = new Cache(config.get('MAX_CACHE_SIZE'));
 
 const requestUrl = `http://${config.get('PANTRY_HOST')}/live`;
 const retryOptions = {
@@ -41,18 +44,29 @@ async function updateClient(socket) {
   }
 }
 
-async function relayData(data) {
+async function relayData() {
+  const promises = [];
+  for (const item of cache.slice(0, 10)) {
+    promises.push(cache.asyncRemoveIf(item.key, async () => {
+      const data = item.data;
+      logger.log('transporting item', data.length, requestUrl);
+      await retry(() => axios.post(requestUrl, { data }), retryOptions);
+    }));
+  }
+
   try {
-    logger.log('transporting item', data.length, requestUrl);
-    await retry(() => axios.post(requestUrl, { data }), retryOptions);
+    await Promise.all(promises);
   } catch (err) {
     logger.log('relay error', err.message);
   }
+
+  logger.log('cache size', cache.size());
 }
 
 function onData(socket) {
   return async (data) => {
-    await Promise.all([updateClient(socket), relayData(data)]);
+    cache.push(data);
+    await Promise.all([updateClient(socket), relayData()]);
   }
 }
 
