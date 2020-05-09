@@ -7,7 +7,7 @@ const config = require('config');
 
 const logger = require('../util/logger');
 
-const requestUrl = `${config.get('PANTRY_HOST')}/historic`;
+const requestUrl = `http://${config.get('PANTRY_HOST')}/historic`;
 const dbPath = path.join(os.homedir(), config.get('SQL_PATH'));
 
 const FIVE_MINUTES = 5 * 60 * 1000;

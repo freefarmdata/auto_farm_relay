@@ -43,7 +43,7 @@ async function updateClient(socket) {
 
 async function relayData(data) {
   try {
-    logger.log('transporting item', data.length);
+    logger.log('transporting item', data.length, requestUrl);
     await retry(() => axios.post(requestUrl, { data }), retryOptions);
   } catch (err) {
     logger.log('relay error', err.message);
