@@ -17,6 +17,6 @@
     "config": "^3.3.1",
     "express": "^4.17.1",
     "sqlite3": "^4.1.1",
-    "auto_farm_protos": "git+ssh://git@github.com/freefarmdata/auto_farm_protos.git"
+    "auto_farm_protos": "git+https://git@github.com/freefarmdata/auto_farm_protos.git"
   }
 }
