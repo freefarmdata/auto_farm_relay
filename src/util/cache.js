@@ -12,24 +12,32 @@ class Cache {
    * Removes the key from the cache
    * if the async function does not
    * throw an error
-   * @param {number} key 
+   * @param {number | [number]} key 
    * @param {function} fn 
    */
-  async asyncRemoveIf(key, fn) {
-    await fn(key);
-    this.remove(key);
+  async asyncRemoveIf(keys, fn) {
+    await fn();
+    if (Array.isArray(keys)) {
+      keys.forEach(this.remove.bind(this));
+    } else {
+      this.remove(keys);
+    }
   }
 
   /**
    * Removes the key from the cache
    * if the function does not
    * throw an error
-   * @param {number} key 
+   * @param {number | [number]} key 
    * @param {function} fn 
    */
-  syncRemoveIf(key, fn) {
-    fn(key);
-    this.remove(key);
+  syncRemoveIf(keys, fn) {
+    fn();
+    if (Array.isArray(keys)) {
+      keys.forEach(this.remove.bind(this));
+    } else {
+      this.remove(keys);
+    }
   }
 
   /**
