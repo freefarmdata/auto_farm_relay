@@ -1,10 +1,10 @@
 global.__basedir = __dirname;
 
 const axios = require('axios');
+const proto = require('auto_farm_protos');
 const live = require('./controllers/live');
 const update = require('./controllers/update');
 const historic = require('./controllers/historic');
-const proto = require('./util/proto');
 const logger = require('./util/logger');
 
 axios.defaults.headers.common[ 'Content-Type' ] = 'application/json';

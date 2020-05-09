@@ -6,7 +6,7 @@ const update = require('./update');
 
 const logger = require('../util/logger');
 
-const requestUrl = `${config.get('LIVE_PANTRY_HOST')}/ingest`;
+const requestUrl = `${config.get('PANTRY_HOST')}/live`;
 const retryOptions = {
   retries: 3,
   factor: 1.245,

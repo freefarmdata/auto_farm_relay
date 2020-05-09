@@ -16,7 +16,7 @@
     "axios": "^0.19.2",
     "config": "^3.3.1",
     "express": "^4.17.1",
-    "protobufjs": "^6.8.9",
-    "sqlite3": "^4.1.1"
+    "sqlite3": "^4.1.1",
+    "auto_farm_protos": "git+ssh://git@github.com/freefarmdata/auto_farm_protos.git"
   }
 }
