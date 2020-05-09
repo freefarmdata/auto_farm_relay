@@ -46,10 +46,13 @@ async function updateClient(socket) {
 
 async function relayData() {
   const promises = [];
-  for (const item of cache.slice(0, 10)) {
+  const slice = cache.slice(0, 10);
+
+  logger.log(`transporting ${slice.length} items`, requestUrl);
+
+  for (const item of slice) {
     promises.push(cache.asyncRemoveIf(item.key, async () => {
       const data = item.data;
-      logger.log('transporting item', data.length, requestUrl);
       await retry(() => axios.post(requestUrl, { data }), retryOptions);
     }));
   }
