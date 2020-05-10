@@ -47,9 +47,7 @@ async function updateClient(socket) {
 async function relayData() {
   const promises = [];
 
-  const tenP = Number.parseInt(cache.size() * 0.1);
-  const sliceSize = tenP > 100 ? 100 : tenP; 
-  const slice = cache.slice(0, sliceSize);
+  const slice = cache.slice(0, 30);
 
   logger.log(`transporting ${slice.length} items`, requestUrl);
 
