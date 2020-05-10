@@ -47,8 +47,6 @@ async function updateClient(socket) {
 }
 
 async function relayData() {
-  const promises = [];
-
   const sliceSize = slicing.calculateSliceSize(cache.size(), maxCacheSize, 50, 500)
   const slice = cache.slice(0, sliceSize);
 
