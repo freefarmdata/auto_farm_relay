@@ -4,10 +4,12 @@ const config = require('config');
 const net = require('net');
 const update = require('./update');
 const Cache = require('../util/cache');
+const slicing = require('../util/slicing');
 
 const logger = require('../util/logger');
 
-const cache = new Cache(config.get('MAX_CACHE_SIZE'));
+const maxCacheSize = config.get('MAX_CACHE_SIZE');
+const cache = new Cache(maxCacheSize);
 
 const requestUrl = `http://${config.get('PANTRY_HOST')}/live`;
 const retryOptions = {
@@ -47,16 +49,23 @@ async function updateClient(socket) {
 async function relayData() {
   const promises = [];
 
-  const slice = cache.slice(0, 30);
+  const sliceSize = slicing.calculateSliceSize(cache.size(), maxCacheSize, 50, 500)
+  const slice = cache.slice(0, sliceSize);
 
   logger.log(`transporting ${slice.length} items`, requestUrl);
 
-  for (const item of slice) {
-    promises.push(cache.asyncRemoveIf(item.key, async () => {
-      const data = item.data;
-      await retry(() => axios.post(requestUrl, { data }), retryOptions);
-    }));
-  }
+  const promises = slice
+    .reduce(slicing.partition(10), [])
+    .map((items) => {
+      const { keys, data } = items.reduce((acc, item) => {
+        acc.keys.push(item.key);
+        acc.data.push(item.data);
+        return acc;
+      }, { keys: [], data: [] });
+      return cache.asyncRemoveIf(keys, async () => {
+        await retry(() => axios.post(requestUrl, { data }), retryOptions);
+      })
+    });
 
   try {
     await Promise.all(promises);

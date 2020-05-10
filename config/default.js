@@ -5,5 +5,5 @@ module.exports = {
   RELAY_HOST: '0.0.0.0',
   PANTRY_HOST: '192.168.0.6:5757',
   SQL_PATH: '.auto_farm/database.db',
-  MAX_CACHE_SIZE: 1000
+  MAX_CACHE_SIZE: 10000
 }
