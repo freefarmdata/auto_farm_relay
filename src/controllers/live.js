@@ -81,8 +81,8 @@ function onData(socket) {
     if (header === UPDATE_HEADER) {
       await updateClient(socket);
     } else if (header === DATA_HEADER) {
-      const data = Buffer.from(data.slice(4, data.length));
-      cache.push(data);
+      const state = Buffer.from(data.slice(4, data.length));
+      cache.push(state);
       await relayData();
     }
   }
