@@ -8,7 +8,7 @@ const config = require('config');
 const logger = require('../util/logger');
 
 const requestUrl = `http://${config.get('PANTRY_HOST')}/historic`;
-const dbPath = path.join(os.homedir(), config.get('SQL_PATH'));
+const dbPath = path.join(os.homedir(), config.get('DB_PATH'));
 
 const FIVE_MINUTES = 5 * 60 * 1000;
 const retryOptions = {
@@ -126,7 +126,7 @@ async function process() {
 }
 
 function initialize() {
-  setInterval(process, FIVE_MINUTES);
+  // setInterval(process, FIVE_MINUTES);
 }
 
 module.exports = {

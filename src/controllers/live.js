@@ -8,9 +8,10 @@ const slicing = require('../util/slicing');
 
 const logger = require('../util/logger');
 
+const UPDATE_HEADER = 4321;
+const DATA_HEADER = 1234;
 const maxCacheSize = config.get('MAX_CACHE_SIZE');
 const cache = new Cache(maxCacheSize);
-
 const requestUrl = `http://${config.get('PANTRY_HOST')}/live`;
 const retryOptions = {
   retries: 3,
@@ -76,8 +77,14 @@ async function relayData() {
 
 function onData(socket) {
   return async (data) => {
-    cache.push(data);
-    await Promise.all([updateClient(socket), relayData()]);
+    const header = Buffer.from(data.slice(0, 4)).readInt32LE();
+    if (header === UPDATE_HEADER) {
+      await updateClient(socket);
+    } else if (header === DATA_HEADER) {
+      const data = Buffer.from(data.slice(4, data.length));
+      cache.push(data);
+      await relayData();
+    }
   }
 }
 
